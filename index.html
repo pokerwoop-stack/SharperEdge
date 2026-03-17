@@ -130,7 +130,6 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
   <button class="nav-tab" onclick="nav('picks',this)">AI PICKS</button>
   <button class="nav-tab" onclick="nav('tracker',this)">BET TRACKER</button>
   <button class="nav-tab" onclick="nav('dash',this)">DASHBOARD</button>
-  <button class="nav-tab" onclick="nav('setup',this)">SETUP</button>
   <div class="nav-right">
     <div class="dot" id="sdot"></div>
     <div class="dot-label" id="slabel">checking...</div>
@@ -139,11 +138,6 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
 
 <!-- LIVE ODDS -->
 <div class="page on" id="pg-odds">
-  <div class="stags">
-    <span class="stag live">THE ODDS API</span>
-    <span class="stag live">DRAFTKINGS · FANDUEL · BETMGM</span>
-    <span class="stag">NFL · NBA · MLB · NHL · MMA · NCAAF · NCAAB</span>
-  </div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">
     <button class="btn bb sport-btn" id="btn-nfl" onclick="loadOdds('americanfootball_nfl',this)">NFL</button>
     <button class="btn bb sport-btn" id="btn-nba" onclick="loadOdds('basketball_nba',this)">NBA</button>
@@ -159,11 +153,6 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
 
 <!-- AI PICKS -->
 <div class="page" id="pg-picks">
-  <div class="stags">
-    <span class="stag live">CLAUDE AI</span>
-    <span class="stag live">LIVE ODDS CONTEXT</span>
-    <span class="stag live">TEAM STATS</span>
-  </div>
   <div class="card" style="margin-bottom:1rem">
     <div class="ct">Configure Pick</div>
     <div class="g2" style="margin-bottom:10px">
@@ -228,73 +217,6 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
   </div>
 </div>
 
-<!-- SETUP -->
-<div class="page" id="pg-setup">
-  <div class="g2">
-    <div>
-      <div class="card" style="margin-bottom:1rem">
-        <div class="ct">Quick Setup Guide</div>
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-body">
-            <div class="step-title">Get The Odds API key</div>
-            <div class="step-desc">Free tier = 500 req/month, more than enough to start.<br><a href="https://the-odds-api.com" target="_blank">the-odds-api.com →</a></div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-body">
-            <div class="step-title">Get API-Sports key</div>
-            <div class="step-desc">Free tier = 100 req/day for team stats + standings.<br><a href="https://api-sports.io" target="_blank">api-sports.io →</a></div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-body">
-            <div class="step-title">Deploy to Vercel</div>
-            <div class="step-desc">
-              1. Push this folder to a GitHub repo<br>
-              2. Go to <a href="https://vercel.com" target="_blank">vercel.com</a> → Import repo<br>
-              3. Add env vars in Vercel dashboard:<br>
-              <code>ODDS_API_KEY</code><br>
-              <code>API_SPORTS_KEY</code><br>
-              <code>ANTHROPIC_API_KEY</code><br>
-              4. Hit Deploy — done.
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-body">
-            <div class="step-title">Add Stripe paywall (next step)</div>
-            <div class="step-desc">Free users get 3 picks/month. Paid subscribers ($15/mo) get unlimited. We'll build this next.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="card" style="margin-bottom:1rem">
-        <div class="ct">Data Sources</div>
-        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
-          <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">The Odds API <span class="stag live" style="margin-left:8px">PRIMARY</span></div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6">Live spreads, moneylines, O/U<br>DraftKings, FanDuel, BetMGM<br>NFL · NBA · MLB · NHL · MMA · NCAAF · NCAAB</div>
-        </div>
-        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
-          <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">API-Sports <span class="stag live" style="margin-left:8px">STATS</span></div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6">Team standings, injury reports<br>NFL · NBA · MLB · NHL season data<br>100 free calls/day</div>
-        </div>
-        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
-          <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">balldontlie <span class="stag live" style="margin-left:8px">NBA FREE</span></div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6">NBA player stats, season averages<br>Completely free, no key needed<br>Great for player prop context</div>
-        </div>
-        <div>
-          <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">Claude AI <span class="stag live" style="margin-left:8px">ENGINE</span></div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6">Receives all data above as context<br>Generates structured pick analysis<br>Your Anthropic key, hidden server-side</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="disclaimer">
   SHARPEDGE IS FOR INFORMATIONAL AND ENTERTAINMENT PURPOSES ONLY. WE DO NOT ACCEPT WAGERS, GUARANTEE OUTCOMES, OR PROVIDE LICENSED FINANCIAL OR GAMBLING ADVICE. SPORTS BETTING INVOLVES SUBSTANTIAL RISK OF LOSS. NEVER BET MORE THAN YOU CAN AFFORD TO LOSE. IF YOU OR SOMEONE YOU KNOW HAS A GAMBLING PROBLEM, CALL 1-800-GAMBLER.
@@ -518,9 +440,6 @@ async function getPick() {
         <div class="cb ${confClass}">${confLabel}</div>
       </div>
       <p style="color:var(--text);font-size:13px;line-height:1.75">${html}</p>
-      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:9px;color:var(--dim)">
-        POWERED BY CLAUDE AI · ODDS: THE ODDS API · STATS: API-SPORTS · FOR ENTERTAINMENT PURPOSES ONLY
-      </div>
     </div>`;
   } catch (e) {
     res.innerHTML = `<div class="pick-out" style="color:var(--red);font-family:var(--mono);font-size:12px">Error: ${e.message}<br>Check the Setup tab.</div>`;
