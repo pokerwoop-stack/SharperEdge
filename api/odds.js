@@ -12,9 +12,17 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'ODDS_API_KEY not set in environment variables.' });
   }
 
-  const allowedSports = ['americanfootball_nfl', 'basketball_nba'];
+  const allowedSports = [
+    'americanfootball_nfl',
+    'americanfootball_ncaaf',
+    'basketball_nba',
+    'basketball_ncaab',
+    'baseball_mlb',
+    'icehockey_nhl',
+    'mma_mixed_martial_arts',
+  ];
   if (!allowedSports.includes(sport)) {
-    return res.status(400).json({ error: 'Invalid sport. Use americanfootball_nfl or basketball_nba.' });
+    return res.status(400).json({ error: 'Invalid sport key.' });
   }
 
   try {

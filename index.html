@@ -57,6 +57,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14
 .sp{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:3px;font-weight:500}
 .sp.nfl{background:#1a2e1a;color:#4ade80}
 .sp.nba{background:#1a2040;color:#60a5fa}
+.sp.mlb{background:#2e1a0a;color:#fb923c}
+.sp.nhl{background:#1a1040;color:#c084fc}
+.sp.mma{background:#2e0a0a;color:#f87171}
+.sport-btn.active-sport{border-color:var(--green);color:var(--green)}
 .gc-time{font-family:var(--mono);font-size:10px;color:var(--muted)}
 .gc-match{font-family:var(--head);font-size:20px;font-weight:600;letter-spacing:.5px;margin-bottom:.6rem}
 .odds-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -138,14 +142,19 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
   <div class="stags">
     <span class="stag live">THE ODDS API</span>
     <span class="stag live">DRAFTKINGS · FANDUEL · BETMGM</span>
-    <span class="stag">NFL · NBA</span>
+    <span class="stag">NFL · NBA · MLB · NHL · MMA · NCAAF · NCAAB</span>
   </div>
-  <div style="display:flex;gap:8px;margin-bottom:1rem">
-    <button class="btn bb" onclick="loadOdds('americanfootball_nfl')">NFL</button>
-    <button class="btn bb" onclick="loadOdds('basketball_nba')">NBA</button>
-    <button class="btn bb" style="margin-left:auto" onclick="loadOdds(currentSport)">REFRESH</button>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">
+    <button class="btn bb sport-btn" id="btn-nfl" onclick="loadOdds('americanfootball_nfl',this)">NFL</button>
+    <button class="btn bb sport-btn" id="btn-nba" onclick="loadOdds('basketball_nba',this)">NBA</button>
+    <button class="btn bb sport-btn" id="btn-mlb" onclick="loadOdds('baseball_mlb',this)">MLB</button>
+    <button class="btn bb sport-btn" id="btn-nhl" onclick="loadOdds('icehockey_nhl',this)">NHL</button>
+    <button class="btn bb sport-btn" id="btn-mma" onclick="loadOdds('mma_mixed_martial_arts',this)">MMA</button>
+    <button class="btn bb sport-btn" id="btn-ncaaf" onclick="loadOdds('americanfootball_ncaaf',this)">NCAAF</button>
+    <button class="btn bb sport-btn" id="btn-ncaab" onclick="loadOdds('basketball_ncaab',this)">NCAAB</button>
+    <button class="btn bb" style="margin-left:auto" onclick="loadOdds(currentSport,null)">REFRESH</button>
   </div>
-  <div id="odds-list"><div class="empty">Click NFL or NBA to load live odds.<br>If you see an error, check the Setup tab.</div></div>
+  <div id="odds-list"><div class="empty">Select a sport above to load live odds.<br>If you see an error, check the Setup tab.</div></div>
 </div>
 
 <!-- AI PICKS -->
@@ -183,7 +192,7 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
   <div class="card" style="margin-bottom:1rem">
     <div class="ct">Log a Bet</div>
     <div class="form-row">
-      <div class="fl"><label>Sport</label><select id="b-sport"><option>NFL</option><option>NBA</option></select></div>
+      <div class="fl"><label>Sport</label><select id="b-sport"><option>NFL</option><option>NBA</option><option>MLB</option><option>NHL</option><option>MMA</option><option>NCAAF</option><option>NCAAB</option></select></div>
       <div class="fl"><label>Bet Type</label><select id="b-type"><option>Spread</option><option>Moneyline</option><option>Over/Under</option><option>Parlay</option><option>Prop</option></select></div>
       <div class="fl"><label>Outcome</label><select id="b-outcome"><option>Pending</option><option>Win</option><option>Loss</option><option>Push</option></select></div>
     </div>
@@ -268,11 +277,11 @@ code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:2px 6px
         <div class="ct">Data Sources</div>
         <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
           <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">The Odds API <span class="stag live" style="margin-left:8px">PRIMARY</span></div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6">Live spreads, moneylines, O/U<br>DraftKings, FanDuel, BetMGM<br>NFL + NBA · Updated every ~5 min</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Live spreads, moneylines, O/U<br>DraftKings, FanDuel, BetMGM<br>NFL · NBA · MLB · NHL · MMA · NCAAF · NCAAB</div>
         </div>
         <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
           <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">API-Sports <span class="stag live" style="margin-left:8px">STATS</span></div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6">Team standings, injury reports<br>NFL + NBA season data<br>100 free calls/day</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Team standings, injury reports<br>NFL · NBA · MLB · NHL season data<br>100 free calls/day</div>
         </div>
         <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
           <div style="font-family:var(--head);font-size:15px;font-weight:600;margin-bottom:4px">balldontlie <span class="stag live" style="margin-left:8px">NBA FREE</span></div>
@@ -328,8 +337,10 @@ function getMarket(bk, key) {
   return bk?.markets?.find(m => m.key === key)?.outcomes || null;
 }
 
-async function loadOdds(sport) {
+async function loadOdds(sport, btn) {
   currentSport = sport;
+  document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active-sport'));
+  if (btn) btn.classList.add('active-sport');
   const el = document.getElementById('odds-list');
   el.innerHTML = '<div class="empty"><div class="dots"><i></i><i></i><i></i></div> Loading live odds from The Odds API...</div>';
   try {
@@ -362,10 +373,16 @@ function renderGames(sport) {
     const overOu = ou?.find(o => o.name === 'Over');
     const dt = new Date(g.commence_time);
     const time = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + ' · ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    const sc = sport === 'basketball_nba' ? 'nba' : 'nfl';
+    const scMap = {
+      'basketball_nba':'nba','basketball_ncaab':'nba',
+      'americanfootball_nfl':'nfl','americanfootball_ncaaf':'nfl',
+      'baseball_mlb':'mlb','icehockey_nhl':'nhl','mma_mixed_martial_arts':'mma'
+    };
+    const sc = scMap[sport] || 'nfl';
+    const isMMA = sport === 'mma_mixed_martial_arts';
     return `<div class="gc" id="gc-${i}" onclick="selGame(${i})">
       <div class="gc-top">
-        <span class="sp ${sc}">${sc.toUpperCase()}</span>
+        <span class="sp ${sc}">${isMMA ? "MMA/UFC" : sc.toUpperCase()}</span>
         <span class="gc-time">${time}</span>
       </div>
       <div class="gc-match">${g.away_team} <span style="color:var(--dim)">@</span> ${g.home_team}</div>
@@ -440,12 +457,21 @@ async function getPick() {
   res.innerHTML = '<div class="pick-out" style="color:var(--muted);font-size:12px;font-family:var(--mono)">Fetching live odds + team context...</div>';
 
   const oddsCtx = buildOddsCtx(g);
-  const sport = currentSport.includes('nfl') ? 'NFL' : 'NBA';
+  const sportMap = {
+    'americanfootball_nfl': 'NFL',
+    'americanfootball_ncaaf': 'College Football',
+    'basketball_nba': 'NBA',
+    'basketball_ncaab': 'College Basketball',
+    'baseball_mlb': 'MLB',
+    'icehockey_nhl': 'NHL',
+    'mma_mixed_martial_arts': 'MMA/UFC',
+  };
+  const sport = sportMap[currentSport] || currentSport;
 
   // Try to fetch supplemental stats context
   let statsContext = '';
   try {
-    const statSport = sport === 'NFL' ? 'nfl' : 'nba';
+    const statSport = sport.includes('Football') ? 'nfl' : 'nba';
     const standR = await fetch(`/api/stats?type=standings&sport=${statSport}`);
     if (standR.ok) {
       const standD = await standR.json();
@@ -570,7 +596,7 @@ function renderDash() {
 
   document.getElementById('d-total').textContent = bets.length;
 
-  document.getElementById('d-sport').innerHTML = ['NFL', 'NBA'].map(sp => {
+  document.getElementById('d-sport').innerHTML = ['NFL', 'NBA', 'MLB', 'NHL', 'MMA', 'NCAAF', 'NCAAB'].map(sp => {
     const sb = bets.filter(b => b.sport === sp && b.outcome !== 'Pending');
     if (!sb.length) return `<div style="margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--dim)">${sp} — no data</div>`;
     const sw = sb.filter(b => b.outcome === 'Win').length;
